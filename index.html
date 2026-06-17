@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 PixeLedger OS // Vintage Slate Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-title">📜 PIXELEDGER OS // VINTAGE SLATE SUITE</div>
+        <div>
+            <button onclick="lockSystemVault()" style="background: var(--color-paper); color: var(--color-ink); font-size:7px; box-shadow: 2px 2px 0px var(--color-sage);">🔒 Lock System</button>
+        </div>
+    </header>
+
+    <div class="page-navigation-tabs">
+        <button class="nav-tab active-page-tab" id="pageTab-writer" onclick="navigateToPage('writer')">📝 Canvas Writer</button>
+        <button class="nav-tab" id="pageTab-directory" onclick="navigateToPage('directory')">🗂️ Index Directory</button>
+        <button class="nav-tab" id="pageTab-review" onclick="navigateToPage('review')">📖 Deep Review Desk</button>
+        <button class="nav-tab" id="pageTab-settings" onclick="navigateToPage('settings')">⚙️ Security Vault</button>
+    </div>
+
+    <div class="workspace-viewport">
+
+        <div class="vault-lockout-screen" id="gateKeeperOverlay">
+            <div style="font-size: 28px; margin-bottom: 12px;">🏺</div>
+            <div id="gateTitle" style="color: var(--color-iron); font-weight: bold; font-size: 11px; margin-bottom: 8px;">SIGNATURE TOKEN UNLOCKED REQ</div>
+            <div id="gateInstructions" style="font-size: 7px; opacity: 0.8; margin-bottom: 16px; line-height: 1.5; max-width: 400px;">
+                Enter validation code string below to mount the secure local database structures.
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; width:260px;">
+                <input type="password" id="vaultGateInput" placeholder="Password String..." style="text-align:center; background:#fff;">
+                <button id="gateActionBtn" onclick="processVaultAuthentication()" style="color:#fff;">Mount Ledger System</button>
+            </div>
+        </div>
+
+        <div class="app-page-view active-view" id="viewPage-writer">
+            <div class="slot-bar">
+                <button class="slot-button active-slot" id="slotTrigger-1" onclick="performSlotSwap(1)">Slot 01</button>
+                <button class="slot-button" id="slotTrigger-2" onclick="performSlotSwap(2)">Slot 02</button>
+                <button class="slot-button" id="slotTrigger-3" onclick="performSlotSwap(3)">Slot 03</button>
+            </div>
+
+            <h2>
+                <span>Active Writer Slate</span>
+                <span style="font-size: 6px; text-transform: none; color: var(--color-ink); background: var(--color-sage); padding:2px 4px; border:1px solid var(--color-ink);">💡 Tip: Press Ctrl + T for Timestamp</span>
+            </h2>
+
+            <div class="control-shelf">
+                <span class="shelf-label">Document Title:</span>
+                <input type="text" id="documentTitleInput" placeholder="Enter custom log title..." style="width: 240px; font-size:8px; background:#fff;">
+
+                <span class="shelf-label">Cap Rule:</span>
+                <select id="charCapSelect" onchange="refreshEditorConstraints()">
+                    <option value="0">None (Infinite)</option>
+                    <option value="140">140 (Micro Log)</option>
+                    <option value="450">450 (Standard Document)</option>
+                </select>
+
+                <span class="shelf-label">Margin:</span>
+                <select id="marginWidthSelect" onchange="refreshEditorConstraints()">
+                    <option value="wide">Wide Screen Edge</option>
+                    <option value="narrow">Narrow Book Center</option>
+                </select>
+
+                <button onclick="injectTimeMarker()" style="font-size:7px; padding:4px 6px;">⏱️ Manual Timestamp</button>
+            </div>
+
+            <div class="writer-full-workspace">
+                <div class="editor-container">
+                    <textarea class="journal-textarea margin-wide" id="editorInputArea" spellcheck="false" placeholder="Type text freely here..." oninput="refreshEditorConstraints()"></textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button onclick="commitTextToArchiveDB()" style="background-color: var(--color-iron); color: #ffffff; flex: 1; padding: 10px;">💾 Save & Commit Entry to Archive</button>
+                <button onclick="wipeWriterDraft()" style="background: transparent; border:none; box-shadow:none; color: var(--color-ink);">[Clear Text]</button>
+            </div>
+        </div>
+
+        <div class="app-page-view" id="viewPage-directory">
+            <h2><span>Archived File Directory</span></h2>
+            
+            <div class="control-shelf">
+                <span class="shelf-label">Search Filter:</span>
+                <input type="text" id="keywordSearchFilter" placeholder="Filter custom titles or logs live..." style="flex:1; font-size:8px; background:#fff;" oninput="renderDirectoryStreamList()">
+            </div>
+
+            <div class="split-directory-layout">
+                <div class="directory-list-pane" id="logsListTargetBox"></div>
+
+                <div class="notes-edit-pane">
+                    <div style="border: 2px solid var(--color-ink); padding: 10px; background: var(--color-sage); flex: 1; display:flex; flex-direction:column;">
+                        <div style="font-size:7px; font-weight:bold; margin-bottom:6px; color: var(--color-ink);">📌 RETROACTIVE HINDSIGHT NOTE</div>
+                        <textarea id="hindsightNoteEditorArea" disabled style="flex:1; width:100%; background:#fff; resize:none; line-height:1.4; font-family:monospace; font-size:11px;" placeholder="[Select an entry on the left to add retroactive notes here]" oninput="processHindsightNoteSave()"></textarea>
+                        <button id="jumpToReviewDeskBtn" disabled onclick="navigateToPage('review')" style="margin-top:8px; width:100%; font-size:7px; background: var(--color-paper); color: var(--color-ink);">📖 View Document In Review Desk</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-page-view" id="viewPage-review">
+            <h2><span>Deep Inspection Document Desk</span></h2>
+            <div style="font-size:7px; color: var(--color-ink); margin-bottom:10px; line-height:1.4;">Displays literal text layouts exactly as they were formatted inside your workspace.</div>
+
+            <div class="reading-desk-board" id="fullScreenViewerTarget"></div>
+        </div>
+
+        <div class="app-page-view" id="viewPage-settings">
+            <h2><span>Automated File Directory Syncing & Exports</span></h2>
+            
+            <div style="display:flex; flex-direction:column; gap:14px; max-width:550px; margin-top:10px;">
+                <div style="border:2px solid var(--color-ink); padding:12px; background:var(--color-sage);">
+                    <div style="font-weight:bold; font-size:9px; margin-bottom:6px; color: var(--color-ink);">📂 Automated Folder Workspace Linker (HTML5 API)</div>
+                    <div style="font-size:7px; opacity:0.8; margin-bottom:10px; line-height:1.5;">
+                        Link an empty dedicated folder on your computer structure. Once mapped, the app can write independent plain text documents seamlessly to that folder without naming pop-ups.
+                    </div>
+                    <button onclick="requestLocalFolderAccessHandle()" style="background: var(--color-ink); color: #fff; box-shadow: 2px 2px 0px var(--color-iron);">Initialize Direct Folder Pipeline Link</button>
+                    <span id="folderLinkStatusNode" style="font-size:7px; margin-left:10px; font-weight:bold;">Status: Unlinked (Standard Downloads Manual Mode)</span>
+                </div>
+
+                <div style="border:2px solid var(--color-ink); padding:12px; background:rgba(0,0,0,0.02);">
+                    <div style="font-weight:bold; font-size:9px; margin-bottom:6px;">📥 Manual Master Database Export</div>
+                    <button onclick="downloadJSONBackupMap()">Generate and Save Backup Package (.JSON)</button>
+                </div>
+
+                <div style="border:2px solid var(--color-ink); padding:12px; background:rgba(0,0,0,0.02);">
+                    <div style="font-weight:bold; font-size:9px; margin-bottom:6px;">📤 Import Restorations</div>
+                    <button onclick="document.getElementById('hiddenFileInputLoader').click()">Upload Backup Archive File</button>
+                    <input type="file" id="hiddenFileInputLoader" style="display:none;" onchange="uploadJSONBackupMap(event)">
+                </div>
+
+                <div style="border:2px solid var(--color-ink); padding:12px; background:rgba(0,0,0,0.02);">
+                    <div style="font-weight:bold; font-size:9px; color:var(--color-ink); margin-bottom:6px;">⚠️ Destructive Purge</div>
+                    <button onclick="totalDeviceHardPurge()" style="background: var(--color-ink); color:#fff; font-size:7px;">🚨 Wipe System Storage Arrays</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <span id="statLogCount">Slot Archive Records: 00</span>
+        <span id="liveCharIndicator">0 Characters</span>
+        <span id="statSystemTime">Instance Session Counter: 00:00</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
